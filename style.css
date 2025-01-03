@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-   
+
 }
 
 body {
@@ -9,10 +9,12 @@ body {
     margin: 1px;
     font-family: Arial, Helvetica, sans-serif;
 }
-.input{
+
+.input {
     height: 30px;
     border-radius: 8px;
 }
+
 .nav {
     margin-top: 10px;
     display: inline-block;
@@ -90,7 +92,7 @@ header {
 .pp {
     float: right;
     margin-left: 20px;
-    
+
 }
 
 .tb {
@@ -124,7 +126,7 @@ header {
 
 .overflo {
     cursor: pointer;
-    
+
 }
 
 .captione {
@@ -133,32 +135,38 @@ header {
     padding: 20px;
     border-radius: 15px;
 }
-.icon{
+
+.icon {
     background-color: rgb(65, 62, 62);
 }
-.h2{
-   margin-top: 140px;
+
+.h2 {
+    margin-top: 140px;
     text-align: center;
     font-size: 30px;
     color: #E8EEF2;
-    
-}
-.table{
-    padding: 20px;
-   display: flex;
-   justify-content: center;
-   color: #E8EEF2;
 
-   
 }
-.table th{
+
+.table {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    color: #E8EEF2;
+
+
+}
+
+.table th {
     padding: 40px;
     font-size: 20px;
-    
+
 }
-.footer{
+
+.footer {
     background-color: #0B2545;
 }
-.bottem-left{
+
+.bottem-left {
     margin: 15px;
 }
