@@ -74,13 +74,26 @@ header {
     text-align: center;
 }
 
+
+
+
 .web-img {
     border-radius: 10px;
     width: 400px;
 
-
 }
 
+.photo-right{
+    
+        border: 1px solid black;
+        border-radius: 10px;
+        display: inline-block;
+        width: 75%;
+        background-color: #E8EEF2;
+        margin-top: 15px;
+         margin-left: 370px;
+        
+}
 .style-web {
     float: right;
     height: 250px;
@@ -90,7 +103,7 @@ header {
 }
 
 .pp {
-    float: right;
+    display: block;
     margin-left: 20px;
 
 }
@@ -103,12 +116,12 @@ header {
     margin-left: 20px;
     border-radius: 10px;
     background-color: #E8EEF2;
+    
 }
 
 .par {
     text-align: center;
-    width: 500px;
-    margin: 0px 200px;
+   
 }
 
 .hidden {
