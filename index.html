@@ -4,180 +4,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>atila-design</title>
-    <link rel="stylesheet" href="reset.css">
-    <link rel="stylesheet" href="style.css">
+    <title>To-Do List with Weekly Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 70vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(120deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 25px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .app-body {
+            padding: 25px;
+        }
+
+        .week-days {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 13%;
+            padding: 10px 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .day:hover {
+            background: #e9ecef;
+        }
+
+        .day.active {
+            background: #6a11cb;
+            color: white;
+        }
+
+        .day-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .day-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .task-input {
+            display: flex;
+            margin-bottom: 20px;
+
+        }
+
+        .task-input input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .task-input button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .tasks-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: #e9ecef;
+        }
+
+        .task-item.completed {
+            text-decoration: line-through;
+            color: #6c757d;
+            background: #f1f3f5;
+        }
+
+        .task-text {
+            flex-grow: 1;
+            margin: 0 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        /* Scrollbar styling */
+        .tasks-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tasks-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .tasks-container::-webkit-scrollbar-thumb {
+            background: #6a11cb;
+            border-radius: 10px;
+        }
+
+        .tasks-container::-webkit-scrollbar-thumb:hover {
+            background: #2575fc;
+        }
+
+        @media (max-width: 768px) {
+            .week-days {
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+
+            .day {
+                min-width: 50px;
+            }
+
+            .day-name {
+                font-size: 12px;
+            }
+
+            .day-number {
+                font-size: 16px;
+            }
+        }
+
+        .newTaskAdd {
+            background: #6a11cb;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+        }
+
+        .buttomAdd {
+
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .task-input,
+        #tasksContainer {
+            opacity: 1;
+            max-height: 500px;
+            /* مقدار کافی برای بزرگترین محتوا */
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .hidden {
+            opacity: 0;
+            max-height: 0;
+            pointer-events: none;
+            /* تا وقتی مخفی هست کلیک‌پذیر نباشه */
+        }
+    </style>
 </head>
 
 <body>
-    <header>
-        <div style="background: #0B2545;">
-            <div class="log">
-                <input class="input" type="search" name="saerch" id="saerch" placeholder="saerch in">
-                <label for="saerch"></label>
-                <a href="\">Log in</a>
+    <div class="container-wrapper">
+        <div class="header">
+            <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-list-task fs-1 me-3"></i>
+                <div>
+                    <h1 class="h3 mb-0">My To-Do List</h1>
+                    <p id="dateContainer" class="mb-0">Friday, June 12</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-body">
+            <div class="week-days" id="weekDays">
+                <!-- Days will be generated here -->
             </div>
 
-            <nav class="nav">
-                <ul class="nav ul">
-                    <a href="\">about us</a>
-                    <a href="\">practical</a>
-                    <a href="\">contact us</a>
-                    <a href="\">home</a>
-                </ul>
-            </nav>
-        </div>
-        <div class="span">
-            <span>
-                Information about the website
-            </span>
+            <div class="task-input ">
+                <input type="text" class="form-control" id="taskInput" placeholder="Enter a new task...">
+                <button class="btn btn-primary" id="addTaskBtn">
+                    <i class="bi bi-plus-lg"></i> Add
+                </button>
+            </div>
 
-        </div>
-    </header>
-    <div class="tb">
+            <div class="tasks-container" id="tasksContainer">
+                Tasks will be added here
+            </div>
 
-        <img class="style-web" src="website.png" alt="img"> 
-        <div class="pp">
-            <h3>What is a website?</h3>
-            <p>A website is a collection of interconnected web pages that are hosted on a server and accessible via the
-                internet. Websites are typically identified by a unique domain name (www.example.com) and can be
-                accessed through a web browser.</p>
+
+            <footer class="buttomAdd">
+
+                <div onclick='newTaskAdd()' class="newTaskAdd ">
+                    <div style="font-size: 75px; color: #fff;"
+                        class="d-flex justify-content-center align-items-center bi bi-plus "></div>
+                </div>
+            </footer>
         </div>
     </div>
-    <div class="photo-right">
-<div>
-    <img class="style-web" src="images.png" alt="img">
-</div>
-        <div class="pp">
-           
-            <h3>Key Components of a Website:</h3>
-            <ol>
-                <li><b>Domain Name:</b> The unique address of the website, such as</li>
-                <li><b>Web Pages: </b>Individual documents (usually written in HTML, CSS, and JavaScript) that make up
-                    the website.</li>
-                <li><b>Web Server:</b> A computer that stores and delivers the website's content to users when they
-                    request it via a browser.</li>
-                <li><b>Content:</b> Text, images, videos, and other multimedia that provide information or services.
-                </li>
-                <li><b>Navigation:</b> Links, menus, and tools that help users move between pages or sections of the
-                    website.</li>
-            </ol>
 
-        </div>
+    <script src="script.js">
 
-    </div>
-    <div class="tb">
-        <img class="web-img" src="typimg.png" alt="img">
-        <div class="pp">
-
-            <h3>Types of Websites:</h3>
-            <ul>
-                <li><b>Static Websites: </b>Display the same content to every visitor.</li>
-                <li><b>Dynamic Websites:</b>Offer personalized or interactive content based on user inputs or
-                    preferences (e.g., social media platforms, e-commerce sites).</li>
-                <li><b>Blogs:</b>Focus on articles or posts, often maintained by individuals or small groups.</li>
-                <li><b>E-commerce Websites:</b>Designed for buying and selling products or services online.</li>
-                <li><b>Portfolio Websites: </b>Showcase an individual’s or organization’s work.</li>
-                <li><b>Educational Websites: </b>Provide learning resources or courses.</li>
-            </ul>
-        </div>
-    </div>
-    <h2 style="text-align: center; margin: 30px;">Why should we have a website for our store?</h2>
-    <div class="par">
-        <p>Having a website for your store offers numerous benefits, enhancing your visibility, customer
-            engagement, and
-            sales potential. Here are key reasons to consider:
-        </p>
-    </div>
-
-    <div class="captione">
-        <h3 class="overflo">1. Online Presence and Accessibility</h3>
-        <ul class="hidden">
-            <li><b>24/7 Availability:</b> A website allows your customers to learn about and shop at your store at any
-                time, even when your physical location is closed.
-            </li>
-            <li><b>Global Reach: </b>With a website, you can attract customers from beyond your local area, potentially
-                reaching a global audience.
-            </li>
-        </ul>
-        <h3 class="overflo">2. Improved Credibility</h3>
-        <ul class="hidden">
-            <li>A professional website establishes your store as a legitimate and trustworthy business. Customers often
-                expect businesses to have an online presence.
-            </li>
-            <li>It allows you to showcase customer testimonials, awards, and certifications to build trust.
-            </li>
-        </ul>
-        <h3 class="overflo">3. Marketing and Branding</h3>
-        <ul class="hidden">
-            <li>A website serves as a central hub for your branding efforts, giving you control over how your business
-                is perceived.
-            </li>
-            <li>It integrates well with online marketing strategies, such as social media, email marketing, and search
-                engine optimization (SEO).
-            </li>
-        </ul>
-        <h3 class="overflo">4. Convenience for Customers
-        </h3>
-        <ul class="hidden">
-            <li><b>Information Hub:</b> Customers can easily access details about your products, services, location,
-                hours, and policies.
-            </li>
-            <li><b>E-Commerce Capabilities:</b> You can sell products online, offering convenience for customers who
-                prefer shopping from home.
-            </li>
-        </ul>
-        <h3 class="overflo">5. Cost-Effective Advertising</h3>
-        <ul class="hidden">
-            <li>A website can save on traditional advertising costs while providing measurable results through tools
-                like Google Analytics.
-            </li>
-            <li>You can showcase promotions, new arrivals, and seasonal deals directly on your site.
-            </li>
-        </ul>
-        <h3 class="overflo">6. Competition</h3>
-        <ul class="hidden">
-            <li>If your competitors have websites, they have an edge over you. A website helps you stay competitive in
-                your industry.
-            </li>
-            <li>You can differentiate yourself by offering a better online experience.
-            </li>
-        </ul>
-        <h3 class="overflo">7. Customer Insights</h3>
-        <ul class="hidden">
-            <li>A website allows you to collect data about your customers, such as their preferences, buying habits, and
-                feedback, helping you tailor your offerings.
-            </li>
-        </ul>
-        <h3 class="overflo">8. Flexibility</h3>
-        <ul class="hidden">
-            <li>A website can evolve as your business grows, adapting to new products, services, and customer needs.
-            </li>
-        </ul>
-        <h3 class="overflo">9. Cost-Effective Customer Support</h3>
-        <ul class="hidden">
-            <li>With features like FAQs, chatbots, and contact forms, your website can handle common customer inquiries,
-                reducing the need for staff intervention.
-            </li>
-        </ul>
-    </div>
-    <footer class="footer">
-        <h2 class="h2">where to?</h2>
-        <table class="table">
-            <th> outside</th>
-            <th> interior</th>
-            <th> location</th>
-            <th> team</th>
-            <th>video</th>
-        </table>
-        <div class="bottem-left">
-            <b>The first website in training</b>
-            <p>ATILA-DESIGN</p>
-
-            <p>© Copyright Agency and contributors 2025</p>
-
-        </div>
-    </footer>
+    </script>
 </body>
 
 </html>
